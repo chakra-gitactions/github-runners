@@ -9,4 +9,18 @@ jobs:
     uses: actions/checkout@v6
   - name: List files
     run: ls -l
-  
+  - name: Install terraform
+    uses: hashicorp/setup-terraform@v3
+  - name: Congigure AWS Credentials
+    uses: aws-actions/configure-aws-credentials@v5
+    with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+  - name: Initialize terraform
+    run: terraform init
+  - name: Plan 
+    run: terraform plan
+  - name: Deploy
+    run: terraform apply --auto-approve
+     
