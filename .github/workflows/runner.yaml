@@ -1,0 +1,35 @@
+name: Create runner
+on: [workflow_dispatch]
+jobs:
+  create-runner:
+   runs-on: ubuntu-latest
+   steps:
+   - name: Get code   #using resuable plugin/actions
+     uses: actions/checkout@v6
+     
+   - name: List files
+     run: |
+          ls -l
+          
+   - name: Install terrform              #Install terraform using resuable actions/plugins   
+     uses: hashicorp/setup-terraform@v3
+
+   - name: Initialize terraform
+     run: terraform init
+
+   - name: Plan deployment
+     run: terraform plan
+     
+   - name: Configure AWS Credentials
+     uses: aws-actions/configure-aws-credentials@v5
+     with:
+      aws-region: us-east-1
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+   - name: Deploy runner
+     run: terraform apply --auto-approve
+     
+   
+  
+  
